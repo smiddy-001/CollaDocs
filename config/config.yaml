@@ -1,0 +1,11 @@
+DEV:
+  DB_PORT: 1521
+  DB_URL: localhost:1521/devdb
+  DB_USERNAME: devuser
+  DB_PASSWORD: devpassword
+
+TEST:
+  DB_PORT: 1521
+  DB_URL: localhost:1521/testdb
+  DB_USERNAME: testuser
+  DB_PASSWORD: testpassword
