@@ -1,6 +1,6 @@
 default:
-  # default is things that should be generalized as the codebase
-  # would need to be rewritten if these things were to ever change
+  # info that should be defaulted paramaters
+  # these things shouldnt change
   IMAGE_NAME: oracle/database:19.3.0-ee
   DB_HOST_MOUNT_POINT: default
   DB_PORT: 1521
