@@ -1,3 +1,7 @@
+# Colla Docs
+
+a collaborative interactive code document web app
+
 to source development enviroment variables stored in config.yaml
 
 can be `config/load_config.sh` + one of either (`test` or `dev` or `prod`)
