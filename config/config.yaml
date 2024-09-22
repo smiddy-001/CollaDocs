@@ -2,20 +2,23 @@ default:
   # default is things that should be generalized as the codebase
   # would need to be rewritten if these things were to ever change
   IMAGE_NAME: oracle/database:19.3.0-ee
+  DB_HOST_MOUNT_POINT: default
+  DB_PORT: 1521
+  DB_NAME: ORCLCDB # for docker
 
 dev:
   # development build for a reasonably normal thing without a whole lot of test and mocks
-  DB_NAME: dev-colladocs-database # for docker
-  DB_PORT: 1521
+  DOCKER_NAME: dev-colladocs-database
   DB_URL: localhost:1521/devdb
-  DB_USERNAME: devuser
-  DB_PASSWORD: iRwLTwTy2c
+  DB_USERNAME: user_G9feN
+  DB_PASSWORD: c&$MrS%PYV  # >8 characters in length, contain at least 1 uppercase character, 1 lower case character and 1 digit
+  DB_SID: DEV
 
 test:
   # test involves a whole lot of fake users and fake data to reinact what the production
   # would be, usually to be run and instantly shut down to test that the whole thing works
-  DB_NAME: test-colladocs-database # for docker
-  DB_PORT: 1531
+  DOCKER_NAME: test-colladocs-database
   DB_URL: localhost:1521/testdb
-  DB_ADMIN_PASSWORD: iRwLTwTy2c  # 8 characters in length, contain at least 1 uppercase character, 1 lower case character and 1 digit
-  DB_HOST_MOUNT_POINT: default
+  DB_USERNAME: user_HkbeN
+  DB_PASSWORD: iRwLTw*y2c  # >8 characters in length, contain at least 1 uppercase character, 1 lower case character and 1 digit
+  DB_SID: TEST
