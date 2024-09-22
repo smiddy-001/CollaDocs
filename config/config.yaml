@@ -9,7 +9,7 @@ dev:
   DB_PORT: 1521
   DB_URL: localhost:1521/devdb
   DB_USERNAME: devuser
-  DB_PASSWORD: devpassword
+  DB_PASSWORD: iRwLTwTy2c
 
 test:
   # test involves a whole lot of fake users and fake data to reinact what the production
@@ -17,5 +17,5 @@ test:
   DB_NAME: test-colladocs-database # for docker
   DB_PORT: 1531
   DB_URL: localhost:1521/testdb
-  DB_ADMIN_PASSWORD: testpassword  # 8 characters in length, contain at least 1 uppercase character, 1 lower case character and 1 digit
+  DB_ADMIN_PASSWORD: iRwLTwTy2c  # 8 characters in length, contain at least 1 uppercase character, 1 lower case character and 1 digit
   DB_HOST_MOUNT_POINT: default
