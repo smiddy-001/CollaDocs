@@ -1,4 +1,3 @@
-
 # install oracle as a zip and put it in the docker
 
 1. cd -p ~/docker
@@ -8,4 +7,3 @@
 5. you should now have a file either `LINUX.ARM64_1919000_db_home.zip` or similar.
 5. move file to directory `~/docker/docker-images/OracleDatabase/SingleInstance/dockerfiles/19.3.0/`
 6. backend should work now!
-

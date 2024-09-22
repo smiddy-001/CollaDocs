@@ -61,5 +61,7 @@ else
     # oracle docker instance does NOT exist
     #
     echo "Docker image $IMAGE_NAME not found. Please follow the steps in docs/init_database.md to initialize the database."
+    echo
     cat $MY_SCRIPT_DIR/../../docs/init_database.md
+    echo
 fi
