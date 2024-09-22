@@ -1,11 +1,21 @@
-DEV:
+default:
+  # default is things that should be generalized as the codebase
+  # would need to be rewritten if these things were to ever change
+  IMAGE_NAME: oracle/database:19.3.0-ee
+
+dev:
+  # development build for a reasonably normal thing without a whole lot of test and mocks
+  DB_NAME: dev-colladocs-database # for docker
   DB_PORT: 1521
   DB_URL: localhost:1521/devdb
   DB_USERNAME: devuser
   DB_PASSWORD: devpassword
 
-TEST:
-  DB_PORT: 1521
+test:
+  # test involves a whole lot of fake users and fake data to reinact what the production
+  # would be, usually to be run and instantly shut down to test that the whole thing works
+  DB_NAME: test-colladocs-database # for docker
+  DB_PORT: 1531
   DB_URL: localhost:1521/testdb
-  DB_USERNAME: testuser
-  DB_PASSWORD: testpassword
+  DB_ADMIN_PASSWORD: testpassword  # 8 characters in length, contain at least 1 uppercase character, 1 lower case character and 1 digit
+  DB_HOST_MOUNT_POINT: default
