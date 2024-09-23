@@ -5,20 +5,25 @@ default:
   DB_HOST_MOUNT_POINT: default
   DB_PORT: 1521
   DB_NAME: ORCLCDB # for docker
+  DB_HOST: localhost
 
 dev:
   # development build for a reasonably normal thing without a whole lot of test and mocks
-  DOCKER_NAME: dev-colladocs-database
+  CONTAINER_NAME: dev-colladocs-database
   DB_URL: localhost:1521/devdb
-  DB_USERNAME: user_G9feN
-  DB_PASSWORD: c&$MrS%PYV  # >8 characters in length, contain at least 1 uppercase character, 1 lower case character and 1 digit
+  DB_ADMIN_USERNAME: SYS
+  DB_ADMIN_PASSWORD: bmYmq%nwdp  # >8 characters in length, contain at least 1 uppercase character, 1 lower case character and 1 digit
+  DB_USER_USERNAME: user_G9feN
+  DB_USER_PASSWORD: c&$MrS%PYV
   DB_SID: DEV
 
 test:
   # test involves a whole lot of fake users and fake data to reinact what the production
   # would be, usually to be run and instantly shut down to test that the whole thing works
-  DOCKER_NAME: test-colladocs-database
+  CONTAINER_NAME: test-colladocs-database
   DB_URL: localhost:1521/testdb
-  DB_USERNAME: user_HkbeN
-  DB_PASSWORD: iRwLTw*y2c  # >8 characters in length, contain at least 1 uppercase character, 1 lower case character and 1 digit
+  DB_ADMIN_USERNAME: SYS
+  DB_ADMIN_PASSWORD: iRwLTw*y2c  # >8 characters in length, contain at least 1 uppercase character, 1 lower case character and 1 digit
+  DB_USER_USERNAME: user_HkbeN
+  DB_USER_PASSWORD: pass_9s&zr
   DB_SID: TEST
