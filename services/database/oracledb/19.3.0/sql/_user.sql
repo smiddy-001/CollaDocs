@@ -1,0 +1,2 @@
+CREATE USER user_HkbeN
+IDENTIFIED BY pass_9s&zr;
