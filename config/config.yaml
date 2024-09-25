@@ -1,29 +1,90 @@
+#
+#       DECLARATIVE CONFIGURATION YAML
+#       ------------------------------
+#
+#       is used to declare our configuration
+#       in one file. Which is loaded with
+#       load_config.sh which loads the defualt
+#       then either dev or test or prod, 
+#       depending on the 0th level header
+#       then it loads it to the current shell
+#       which is good because sometimes we dont
+#       want our enviroment to be set in stone
+
+# ========================== DEFAULT CONFIG ==========================
+# default is called for everything, it specifies versions and things that 
+# will not be changed often if ever. It should also specify file size limits
+# and that stuff, as this should be the same between test enviroments
+
+# ========================== DEVELOPMENT CONFIG ==========================
+# development is needed so I can pass in some of the productiony stuff into
+# a non production enviroment, to best test out the developemnt stuff, this
+# is also where I can give out some keys to other computers and all of that
+# stuff
+# development build for a reasonably normal thing without a whole lot of test and mocks
+
+# ========================== TEST CONFIG ==========================
+# a testing environment where I can fuck absolute everything up and
+# it is fine as its me just testing things out test involves a whole
+# lot of fake users and fake data to reinact what the production would
+# be, usually to be run and instantly shut down to test that the whole 
+# thing works
+
+# from here on only **inline comments** should be used to make the file as readable as possible
+
+
 default:
-  # info that should be defaulted paramaters
-  # these things shouldnt change
-  IMAGE_NAME: oracle/database:19.3.0-ee
-  DB_HOST_MOUNT_POINT: default
-  DB_PORT: 1521
-  DB_NAME: ORCLCDB # for docker
-  DB_HOST: localhost
+  IMAGE:
+    NAME: oracle/database:19.3.0-ee
+  LOGGING:
+    DB:
+      ENABLE_ARCHIVELOG: true
+      ENABLE_FORCE_LOGGING: true
+  DB:
+    PORT: 1521
+    NAME: ORCLCDB  # for docker
+    HOST: localhost
+    NOFILE: 1024:65536        # Limits the number of open files per process (soft limit: 1024, hard limit: 65536)
+    NPROC: 2047:16384         # Limits the number of processes per user (soft limit: 2047, hard limit: 16384)
+    STACK: 10485760:33554432  # Limits the stack size per process (soft limit: 10 MB, hard limit: 32 MB)
+    MEMLOCK: 3221225472       # Limits the amount of memory that can be locked into RAM (soft and hard limit: 3 GB)
+  BACKEND:
+    ...
+  FRONTEND:
+    ...
+
 
 dev:
-  # development build for a reasonably normal thing without a whole lot of test and mocks
-  CONTAINER_NAME: dev-colladocs-database
-  DB_URL: localhost:1521/devdb
-  DB_ADMIN_USERNAME: SYS
-  DB_ADMIN_PASSWORD: bmYmq%nwdp  # >8 characters in length, contain at least 1 uppercase character, 1 lower case character and 1 digit
-  DB_USER_USERNAME: user_G9feN
-  DB_USER_PASSWORD: c&$MrS%PYV
-  DB_SID: DEV
+  CONTAINER:
+    NAME: dev-colladocs-database
+  DB:
+    URL: localhost:1521/devdb
+    SID: DEV
+    ADMIN:
+      USERNAME: SYS
+      PASSWORD: bmYmq%nwdp  # >8 characters in length, contain at least 1 uppercase character, 1 lower case character and 1 digit
+    USER:
+      USERNAME: user_G9feN
+      PASSWORD: c&$MrS%PYV
+    BACKEND:
+      ...
+    FRONTEND:
+      ...
+
 
 test:
-  # test involves a whole lot of fake users and fake data to reinact what the production
-  # would be, usually to be run and instantly shut down to test that the whole thing works
-  CONTAINER_NAME: test-colladocs-database
-  DB_URL: localhost:1521/testdb
-  DB_ADMIN_USERNAME: SYS
-  DB_ADMIN_PASSWORD: iRwLTw*y2c  # >8 characters in length, contain at least 1 uppercase character, 1 lower case character and 1 digit
-  DB_USER_USERNAME: user_HkbeN
-  DB_USER_PASSWORD: pass_9s&zr
-  DB_SID: TEST
+  CONTAINER:
+    NAME: test-colladocs-database
+  DB:
+    URL: localhost:1521/testdb
+    SID: TEST
+    ADMIN:
+      USERNAME: SYS
+      PASSWORD: iRwLTw*y2c  # >8 characters in length, contain at least 1 uppercase character, 1 lower case character and 1 digit
+    USER:
+      USERNAME: user_HkbeN
+      PASSWORD: pass_9s&zr
+  BACKEND:
+    ...
+  FRONTEND:
+    ...

@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Usage: config/load_config.sh --config <config_file> --mode <mode>
+#   --config: Path to the YAML configuration file
+#   --mode: Configuration mode (e.g., dev, test)
+
+
 # Function to parse YAML
 function parse_yaml {
     local prefix=$2
@@ -99,9 +104,10 @@ if [ $sourced -eq 1 ]; then
     echo "Exported variables:"
     print_exported_variables
 else
-    echo "To add these variables to your environment, run:"
-    echo "source <($(readlink -f "$0") --config \"$CONFIG_FILE\" --mode \"$MODE\")"
-    echo
     echo "Variables that would be exported:"
     print_exported_variables
+    echo
+    echo "To add these variables to your environment, run:"
+    echo "source $(readlink -f "$0") --config \"$CONFIG_FILE\" --mode \"$MODE\""
+    echo
 fi
