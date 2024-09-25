@@ -1,4 +1,0 @@
--- CREATE a TABLE named USER, with a primary key, username, email, password, 
--- jdate, lldate, usettings foreighn key
--- and optionally some indexes to make username/email lookup fast.
--- DO NOT INDEX PASSWORDS!
