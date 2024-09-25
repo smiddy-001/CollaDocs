@@ -8,12 +8,24 @@ CONFIG_SCRIPT_FILE=$CONFIG_FOLDER/load_config.sh
 source $CONFIG_SCRIPT_FILE --config $CONFIG_YAML_FILE --mode test
 # source $CONFIG_SCRIPT_FILE --config $CONFIG_YAML_FILE --mode test
 
-
 # Function to check if the Docker image exists
 check_image_exists() {
   docker image inspect $1 > /dev/null 2>&1
   return $?
 }
+
+log_error(){
+    echo -e \"\033[31;4;4m[ERROR] $@\033[0m\"
+    return 0;
+}
+
+log_error(){
+    echo -e \"\033[93;4;4m[INFO] $@\033[0m\"
+    return 0;
+}
+
+log_error penis
+log_info penis information
 
 {
   docker ps -q
@@ -26,12 +38,10 @@ check_image_exists() {
 }
 
 if check_image_exists $IMAGE_NAME; then
-    #
     # oracle docker instance exists
-    #
-    echo "Docker image $IMAGE_NAME found. Running the container..."
+    logger.error "Docker image $IMAGE_NAME found. Running the container..."
 
-    echo "Debug: IMAGE_NAME=$IMAGE_NAME"
+    logger.debug "IMAGE_NAME=$IMAGE_NAME"
     echo "Debug: DOCKER_NAME=$CONTAINER_NAME"
     echo "Debug: DB_NAME=$DB_NAME"
     echo "Debug: DB_PORT=$DB_PORT"
@@ -72,7 +82,6 @@ if check_image_exists $IMAGE_NAME; then
             EXIT;
             EOF
     fi
-
 else
     # oracle docker instance does NOT exist
     echo "Docker image $IMAGE_NAME not found. Please follow the steps in docs/init_database.md to initialize the database."
