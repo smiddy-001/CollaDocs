@@ -51,16 +51,15 @@ if check_image_exists $IMAGE_NAME; then
         echo "Container $CONTAINER_NAME does not exist. Creating and running the container..."
         docker run --name $CONTAINER_NAME \
             -p $DB_PORT:1521 \
-            --ulimit nofile=1024:65536 \
-            --ulimit nproc=2047:16384 \
-            --ulimit stack=10485760:33554432 \
-            --ulimit memlock=3221225472 \
+            --ulimit nofile=$NOFILE \
+            --ulimit nproc=$NPROC \
+            --ulimit stack=$STACK \
+            --ulimit memlock=$MEMLOCK \
             -e ORACLE_PWD=$DB_ADMIN_PASSWORD \
-            -e ENABLE_ARCHIVELOG=true \
-            -e ENABLE_FORCE_LOGGING=true \
+            -e ENABLE_ARCHIVELOG=$LOGGING_DB_ENABLE_ARCHIVELOG \
+            -e ENABLE_FORCE_LOGGING=$LOGGING_ENABLE_FORCE_LOGGING \
             -e ORACLE_SID=$DB_SID \
             -e ORACLE_PWD=$DB_ADMIN_PASSWORD \
-            -v $DB_HOST_MOUNT_POINT:/opt/oracle/oradata \
             $IMAGE_NAME
 
         docker exec -i $CONTAINER_NAME sqlplus $DB_ADMIN_USERNAME/$DB_ADMIN_PASSWORD@$DB_HOST:$DB_PORT/$DB_ADMIN_NAME as SYSDBA <<EOF
@@ -72,13 +71,10 @@ if check_image_exists $IMAGE_NAME; then
             GRANT CONNECT, RESOURCE TO $DB_USER_USERNAME;
             EXIT;
             EOF
-        
     fi
 
 else
-    #
     # oracle docker instance does NOT exist
-    #
     echo "Docker image $IMAGE_NAME not found. Please follow the steps in docs/init_database.md to initialize the database."
     echo
     cat $DOCS/init_database.md
