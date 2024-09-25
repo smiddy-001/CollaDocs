@@ -65,7 +65,7 @@ dev:
       PASSWORD: bmYmq%nwdp  # >8 characters in length, contain at least 1 uppercase character, 1 lower case character and 1 digit
     USER:
       USERNAME: user_G9feN
-      PASSWORD: c&$MrS%PYV
+      PASSWORD: c\&$MrS%PYV
     BACKEND:
       ...
     FRONTEND:
@@ -83,7 +83,7 @@ test:
       PASSWORD: iRwLTw*y2c  # >8 characters in length, contain at least 1 uppercase character, 1 lower case character and 1 digit
     USER:
       USERNAME: user_HkbeN
-      PASSWORD: pass_9s&zr
+      PASSWORD: pass_9s\&zr
   BACKEND:
     ...
   FRONTEND:
