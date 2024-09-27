@@ -42,7 +42,7 @@ default:
       ENABLE_FORCE_LOGGING: true
   DB:
     PORT: 1521
-    NAME: ORCLCDB  # for docker
+    NAME: ORCLCDB             # for docker
     HOST: localhost
     NOFILE: 1024:65536        # Limits the number of open files per process (soft limit: 1024, hard limit: 65536)
     NPROC: 2047:16384         # Limits the number of processes per user (soft limit: 2047, hard limit: 16384)
@@ -62,10 +62,10 @@ dev:
     SID: DEV
     ADMIN:
       USERNAME: SYS
-      PASSWORD: bmYmq%nwdp  # >8 characters in length, contain at least 1 uppercase character, 1 lower case character and 1 digit
+      PASSWORD: bmYmq%nwdp    # >8 characters in length, contain at least 1 uppercase character, 1 lower case character and 1 digit
     USER:
       USERNAME: user_G9feN
-      PASSWORD: c\&$MrS%PYV
+      PASSWORD: c\&$MrS%PYV   # note & was causing issues and needs to be escaped
     BACKEND:
       ...
     FRONTEND:
@@ -80,7 +80,7 @@ test:
     SID: TEST
     ADMIN:
       USERNAME: SYS
-      PASSWORD: iRwLTw*y2c  # >8 characters in length, contain at least 1 uppercase character, 1 lower case character and 1 digit
+      PASSWORD: iRwLTw*y2c    # >8 characters in length, contain at least 1 uppercase character, 1 lower case character and 1 digit
     USER:
       USERNAME: user_HkbeN
       PASSWORD: pass_9s\&zr
