@@ -11,7 +11,6 @@ config/load_config.sh test
 docker-compose up
 ```
 
-
 ```commandline
 cd -p ~/docker
 git clone https://github.com/oracle/docker-images.git
