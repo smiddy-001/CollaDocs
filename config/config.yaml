@@ -62,10 +62,10 @@ dev:
     SID: DEV
     ADMIN:
       USERNAME: SYS
-      PASSWORD: bmYmq%nwdp    # >8 characters in length, contain at least 1 uppercase character, 1 lower case character and 1 digit
+      PASSWORD: bmYmq%nwdp
     USER:
       USERNAME: user_G9feN
-      PASSWORD: c\&$MrS%PYV   # note & was causing issues and needs to be escaped
+      PASSWORD: ceMrSe3PYV
     BACKEND:
       ...
     FRONTEND:
@@ -80,7 +80,7 @@ test:
     SID: TEST
     ADMIN:
       USERNAME: SYS
-      PASSWORD: iRwLTw*y2c    # >8 characters in length, contain at least 1 uppercase character, 1 lower case character and 1 digit
+      PASSWORD: iRwLTw*y2c
     USER:
       USERNAME: user_HkbeN
       PASSWORD: pass_9s\&zr
