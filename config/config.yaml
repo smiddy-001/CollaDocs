@@ -48,7 +48,7 @@ default:
     NPROC: 2047:16384         # Limits the number of processes per user (soft limit: 2047, hard limit: 16384)
     STACK: 10485760:33554432  # Limits the stack size per process (soft limit: 10 MB, hard limit: 32 MB)
     MEMLOCK: 3221225472       # Limits the amount of memory that can be locked into RAM (soft and hard limit: 3 GB)
-    # URL: jdbc:oracle:thin:@host:port/database
+    # URL: jdbc:oracle:thin:@localhost:1521/ORCLPDB1
   BACKEND:
     ...
   FRONTEND:
@@ -65,8 +65,8 @@ dev:
       USERNAME: SYS
       PASSWORD: bmYmq%nwdp
     USER:
-      USERNAME: user_G9feN
-      PASSWORD: ceMrSe3PYV
+      USERNAME: user_G9feN # sqlplus user_G9feN/ceMrSe3PYV@localhost:1521/ORCLPDB1
+      PASSWORD: ceMrSe3PYV # sqlplus SYS/ceMrSe3PYV as SYSDBA
     BACKEND:
       ...
     FRONTEND:
