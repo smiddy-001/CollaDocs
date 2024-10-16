@@ -1,17 +1,13 @@
--- Step 1: Drop existing tables in the correct order
-
--- Drop tables with foreign key dependencies first
-DROP TABLE CONTRIBUTES_TO_DOCUMENT;
-DROP TABLE OWNS_DOCUMENT;
-DROP TABLE CODE;
-DROP TABLE IMAGE;
-DROP TABLE SECTION;
-
--- Drop tables without dependencies
-DROP TABLE DOCUMENT;
-DROP TABLE DOCUMENT_USER;
-DROP TABLE FOLDER;
-DROP TABLE SECTION_TYPE;
+DROP TABLE CONTRIBUTES_TO_DOCUMENT CASCADE CONSTRAINTS; 
+DROP TABLE OWNS_DOCUMENT CASCADE CONSTRAINTS; 
+DROP TABLE SECTION CASCADE CONSTRAINTS; 
+DROP TABLE CODE CASCADE CONSTRAINTS; 
+DROP TABLE IMAGE CASCADE CONSTRAINTS; 
+DROP TABLE TEXT CASCADE CONSTRAINTS; 
+DROP TABLE DOCUMENT CASCADE CONSTRAINTS; 
+DROP TABLE FOLDER CASCADE CONSTRAINTS; 
+DROP TABLE SECTION_TYPE CASCADE CONSTRAINTS; 
+DROP TABLE DOCUMENT_USER CASCADE CONSTRAINTS;
 
 -- Step 2: Recreate tables with new definitions
 
@@ -84,8 +80,7 @@ CREATE TABLE CONTRIBUTES_TO_DOCUMENT (
 CREATE TABLE SECTION_TYPE (
     section_type_id INTEGER NOT NULL PRIMARY KEY,
     name VARCHAR2(50) NOT NULL UNIQUE,
-    description VARCHAR2(255),
-    CONSTRAINT chk_section_type_name_not_empty CHECK (LENGTH(TRIM(name)) > 0)
+    description VARCHAR2(255)
 );
 
 -- Create SECTION table
@@ -95,11 +90,12 @@ CREATE TABLE SECTION (
     section_type_id INTEGER NOT NULL,
     relative_index INTEGER NOT NULL CHECK (relative_index >= 0),
     relative_y_position INTEGER NOT NULL CHECK (relative_y_position >= 0),
-    content VARCHAR2(4000),
     content_size INTEGER,
+    section_content INTEGER NOT NULL,
+    content_type VARCHAR2(50) NOT NULL CHECK (content_type IN ('VIDEO', 'IMAGE', 'CODE', 'TEXT', 'FIGURE')),
     FOREIGN KEY (document_id) REFERENCES DOCUMENT(DocumentID) ON DELETE CASCADE,
     FOREIGN KEY (section_type_id) REFERENCES SECTION_TYPE(section_type_id) ON DELETE CASCADE,
-    CONSTRAINT chk_content_size CHECK (content_size = LENGTH(content))
+    CONSTRAINT chk_content_size CHECK (content_size < 2000000000)
 );
 
 -- Create CODE table
@@ -109,17 +105,14 @@ CREATE TABLE CODE (
     language VARCHAR2(10) NOT NULL,
     code_text CLOB NOT NULL,
     url VARCHAR2(2048),
-    FOREIGN KEY (section_id) REFERENCES SECTION(section_id) ON DELETE CASCADE,
-    CONSTRAINT chk_language_not_empty CHECK (LENGTH(TRIM(language)) > 0),
-    CONSTRAINT chk_code_text_not_empty CHECK (LENGTH(TRIM(code_text)) > 0)
+    FOREIGN KEY (section_id) REFERENCES SECTION(section_id) ON DELETE CASCADE
 );
 
--- Text table to store text sections
+-- Create TEXT table
 CREATE TABLE TEXT (
     text_id INTEGER PRIMARY KEY,
-    title VARCHAR2(12),      -- Title, following APA 7th style
-    level TINYINT,           -- Goes from 0 to 255
-    data VARCHAR2(65534)     -- HTML textbox maximum
+    style varchar(12) CHECK (style IN ('title', 'subtitle','author','date','abstract', 'quote', 'normal', 'h1', 'h2', 'h3')),
+    data clob
 );
 
 -- Create IMAGE table
@@ -141,43 +134,3 @@ CREATE TABLE IMAGE (
         OR location_type = 'url'
     )
 );
-
--- Step 3: Create triggers
-
--- Trigger to update content_size in SECTION
-CREATE OR REPLACE TRIGGER trg_update_content_size
-BEFORE INSERT OR UPDATE ON SECTION
-FOR EACH ROW
-BEGIN
-    :NEW.content_size := LENGTH(:NEW.content);
-END;
-/
-
--- Trigger to check total size of all sections in a document
-CREATE OR REPLACE TRIGGER trg_check_document_size
-BEFORE INSERT OR UPDATE ON SECTION
-FOR EACH ROW
-DECLARE
-    v_total_size INTEGER;
-    v_max_size INTEGER;
-BEGIN
-    -- Get the maximum allowed size for the user who owns the document
-    SELECT du.max_document_size
-    INTO v_max_size
-    FROM DOCUMENT_USER du
-    JOIN OWNS_DOCUMENT od ON du.UserID = od.UserID
-    WHERE od.DocumentID = :NEW.document_id;
-
-    -- Sum the size of all sections in the document, including the new/updated section
-    SELECT NVL(SUM(content_size), 0) + NVL(:NEW.content_size, 0)
-    INTO v_total_size
-    FROM SECTION
-    WHERE document_id = :NEW.document_id
-    AND section_id != :NEW.section_id;
-
-    -- If the total size exceeds the allowed max size, raise an error
-    IF v_total_size > v_max_size THEN
-        RAISE_APPLICATION_ERROR(-20001, 'Total size of document sections exceeds the allowed max_document_size.');
-    END IF;
-END;
-/
