@@ -13,15 +13,14 @@ DROP TABLE DOCUMENT_USER CASCADE CONSTRAINTS;
 
 -- Create DOCUMENT_USER table
 CREATE TABLE DOCUMENT_USER (
-    UserID integer not null primary key,
-    FName VARCHAR2(20) NOT NULL,
-    LName VARCHAR2(20) NOT NULL,
-    JoinDate timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    LastLoginDate timestamp,
-    max_documents integer NOT NULL CHECK (max_documents > 0),
-    max_document_size integer NOT NULL CHECK (max_document_size > 0),
-    CONSTRAINT chk_name CHECK (LENGTH(TRIM(FName)) > 0 AND LENGTH(TRIM(LName)) > 0),
-    CONSTRAINT chk_login_date CHECK (LastLoginDate IS NULL OR LastLoginDate >= JoinDate)
+    email VARCHAR(255) NOT NULL PRIMARY KEY,
+    password VARCHAR(256) NOT NULL,
+    JOIN_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    LAST_LOGIN_DATE timestamp,
+    SUBSCRIPTION_TYPE integer NOT NULL,
+    MAX_DOCUMENTS integer NOT NULL CHECK (MAX_DOCUMENTS > 3),
+    MAX_DOCUMENT_SIZE integer NOT NULL CHECK (MAX_DOCUMENT_SIZE > 5000),
+    CONSTRAINT chk_login_date CHECK (LAST_LOGIN_DATE IS NULL OR LAST_LOGIN_DATE >= JOIN_DATE)
 );
 
 -- Create FOLDER table
