@@ -20,12 +20,34 @@ public class Application {
     public static void main(String[] args) throws SQLException{
         try {
             openDatabaseConnection();
-            addUser("rileys1000@gmail.com", "password", Subscription.BASIC);
+            // below should fail
+            removeUser("rileys1000@gmail.com", "piss sword");
+            // below should pass
+            removeUser("rileys1000@gmail.com", "password");
+
+            addUser("rileys1000@gmail.com", "password", Subscription.ADVANCED);
         } catch (SQLException e) {
             System.err.println("Error occurred: " + e.getMessage());
         } finally {
             closeDatabaseConnection();
         }
+    }
+
+    private static void removeUser(String email, String password) throws SQLException {
+        System.out.println("Removing a user...");
+        int rowsInserted;
+        try (PreparedStatement statement = connection.prepareStatement("""
+                    DELETE FROM DOCUMENT_USER
+                    WHERE DOCUMENT_USER.email = ?
+                    AND DOCUMENT_USER.password = ?
+                """)) {
+
+                statement.setString(1, email);
+                statement.setString(2, password);
+
+                rowsInserted = statement.executeUpdate();
+            }
+            System.out.println("Rows deleted: " + rowsInserted);
     }
 
     private static void addUser(String email, String password, Subscription subscription) throws SQLException{
@@ -54,6 +76,10 @@ public class Application {
             System.out.println("Rows inserted: " + rowsInserted);
     }
 
+    private static String connectionStatus(Connection connection) throws SQLException{
+        return (connection.isValid(5) ? "online" : "offline");
+    }
+
     private static SubscriptionLimits getLimits(Subscription subscription) {
         switch (subscription) {
             case FREE:
@@ -73,12 +99,12 @@ public class Application {
             "jdbc:oracle:thin:@localhost:1521/ORCLPDB1",
             "user_G9feN", "ceMrSe3PYV"
         );
-        System.out.println("Connection valid: " + connection.isValid(5));
+        System.out.println("Connection valid: " + connectionStatus(connection));
     }
 
     private static void closeDatabaseConnection() throws SQLException{
         System.out.println("Closing database connection...");
         connection.close();
-        System.out.println("Connection valid: " + connection.isValid(5));
+        System.out.println("Connection pool status: " + connectionStatus(connection));
     }
 }
