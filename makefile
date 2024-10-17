@@ -14,10 +14,17 @@ database:
 	@echo "🧨 Starting the database..."
 	cd $(DATABASE_DIR) && $(START_SCRIPT)
 
-.PHONY: database
+.PHONY: api
 api:
 	@echo "🐸 Starting the API..."
 	cd $(API_DIR) && $(START_SCRIPT)
+
+.PHONY: api-docs
+api-docs:
+	@echo "🥬 Starting the api documentation swagger as a webpage..."
+	npm install -g http-server
+	cd docs/api
+	http-server
 
 .PHONY: database
 frontend:
