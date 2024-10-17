@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Colladocs API 0.1
   description: |-
-    colladocs description here...
+    Colladocs API for user management and document handling.
   license:
     name: MIT
     url: https://opensource.org/license/mit
@@ -10,14 +10,15 @@ info:
 
 tags:
   - name: user
-    description: Operations about user
+    description: Operations related to users
+
 paths:
   /user:
     post:
       tags:
         - user
       summary: Create user
-      description: This can only be done by the logged in user.
+      description: This can only be done by the logged-in user.
       operationId: createUser
       requestBody:
         description: Created user object
@@ -49,16 +50,16 @@ paths:
       description: ''
       operationId: loginUser
       parameters:
-        - name: username
+        - name: email
           in: query
-          description: The user name for login
-          required: false
+          description: The email for login
+          required: true
           schema:
             type: string
         - name: password
           in: query
           description: The password for login in clear text
-          required: false
+          required: true
           schema:
             type: string
       responses:
@@ -83,29 +84,29 @@ paths:
               schema:
                 type: string
         '400':
-          description: Invalid username/password supplied
+          description: Invalid email/password supplied
   /user/logout:
     get:
       tags:
         - user
-      summary: Logs out current logged in user session
+      summary: Logs out current logged-in user session
       description: ''
       operationId: logoutUser
       parameters: []
       responses:
         default:
           description: successful operation
-  /user/{username}:
+  /user/{email}:
     get:
       tags:
         - user
-      summary: Get user by user name
+      summary: Get user by email
       description: ''
-      operationId: getUserByName
+      operationId: getUserByEmail
       parameters:
-        - name: username
+        - name: email
           in: path
-          description: 'The name that needs to be fetched. Use user1 for testing. '
+          description: 'The email that needs to be fetched. Use a valid email for testing.'
           required: true
           schema:
             type: string
@@ -120,24 +121,24 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
         '400':
-          description: Invalid username supplied
+          description: Invalid email supplied
         '404':
           description: User not found
     put:
       tags:
         - user
       summary: Update user
-      description: This can only be done by the logged in user.
+      description: This can only be done by the logged-in user.
       operationId: updateUser
       parameters:
-        - name: username
+        - name: email
           in: path
-          description: name that need to be deleted
+          description: email that needs to be updated
           required: true
           schema:
             type: string
       requestBody:
-        description: Update an existent user in the store
+        description: Update an existing user in the store
         content:
           application/json:
             schema:
@@ -155,51 +156,55 @@ paths:
       tags:
         - user
       summary: Delete user
-      description: This can only be done by the logged in user.
+      description: This can only be done by the logged-in user.
       operationId: deleteUser
       parameters:
-        - name: username
+        - name: email
           in: path
-          description: The name that needs to be deleted
+          description: The email that needs to be deleted
           required: true
           schema:
             type: string
       responses:
         '400':
-          description: Invalid username supplied
+          description: Invalid email supplied
         '404':
           description: User not found
+
 components:
   schemas:
     User:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-          example: 10
-        username:
-          type: string
-          example: theUser
-        firstName:
-          type: string
-          example: John
-        lastName:
-          type: string
-          example: James
         email:
           type: string
           example: john@email.com
         password:
           type: string
           example: '12345'
-        phone:
+        join_date:
           type: string
-          example: '12345'
-        userStatus:
+          format: date-time
+          example: '2024-10-17T12:00:00Z'
+        last_login_date:
+          type: string
+          format: date-time
+          example: '2024-10-17T12:00:00Z'
+        subscription_type:
           type: integer
-          description: User Status
-          format: int32
           example: 1
+        max_documents:
+          type: integer
+          example: 5
+        max_document_size:
+          type: integer
+          example: 10000
+      required:
+        - email
+        - password
+        - join_date
+        - subscription_type
+        - max_documents
+        - max_document_size
       xml:
         name: user

@@ -3,6 +3,7 @@ DATABASE_DIR = services/database
 FRONTEND_DIR = services/frontend
 START_SCRIPT = bash ./start.sh
 ENV_TYPE = test  # from config.yaml
+API_DOCS_DIR = docs/api
 SH_FLAGS = --mode $(ENV_TYPE)
 
 .PHONY: 
@@ -23,8 +24,7 @@ api:
 api-docs:
 	@echo "🥬 Starting the api documentation swagger as a webpage..."
 	npm install -g http-server
-	cd docs/api
-	http-server
+	cd $(API_DOCS_DIR) && http-server
 
 .PHONY: database
 frontend:
