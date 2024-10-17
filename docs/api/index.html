@@ -5,30 +5,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>CollaDocs API</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📔</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦊</text></svg>">
 
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/3.52.0/swagger-ui.css" >
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=PT+Mono&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+        @import url('errors.css');
 
         body {
-            background-image: url("background.png");
             background-repeat: no-repeat;
             background-size: 2000px;
             background-repeat: no-repeat;
         }
 
-        .swagger-ui .info {
-            margin: 20px 0;
+        .swagger-ui .info .main {
+            background: url(background.jpg);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            padding: 20px 4rem;
+            border-radius: 4px;
+            box-shadow: 2px 6px 1rem #00000022;
         }
+
+        .swagger-ui .info .description .renderedMarkdown p {
+            color: #000000cc;
+        }
+
+        a, .swagger-ui .info a {
+            color: #dc28d0;
+        }
+        
+        a:hover, .swagger-ui .info a:hover {
+            color: #5C2FE6;
+        }
+
+        .swagger-ui > div > div.wrapper:first-child {
+            box-sizing: border-box;
+            margin: 0 auto;
+            /* max-width: 1460px; */
+            /* padding: 0 20px; */
+            width: 100%;
+        }
+
+        /* .swagger-ui section {
+            width: 100vw;
+            position: absolute;
+            color: white !important;
+            top: 0;
+            left: 0;
+            background: #6aa8dc;
+        } */
 
         .swagger-ui .info .title {
             padding-top: 0;
             font-size: 62px;
             color: white;
-            padding-bottom: 50px;
+            /* padding-bottom: 7rem; */
+            text-shadow: 2px 1px 0rem #00000011;
         }
         .swagger-ui .topbar {
             display: none;
@@ -44,21 +80,29 @@
         }
 
         .microlight {
-                font-family: monospace !important;
-                white-space: pre !important;
-                background-color: #ffffff !important;
-                color: #383a42 !important;
-                padding: 15px !important;
-                text-align: left !important;
-                overflow-x: auto !important;
-                box-shadow: none !important;
-                border-radius: 0.2em grey !important;
-                border: solid #ededed;
-            }
+            font-family: monospace !important;
+            white-space: pre !important;
+            background-color: #ffffff !important;
+            color: #383a42 !important;
+            padding: 15px !important;
+            text-align: left !important;
+            overflow-x: auto !important;
+            box-shadow: none !important;
+            border-radius: 0.2em grey !important;
+            border: solid #ededed;
+        }
 
-            .microlight:not(:last-child) {
-            margin-bottom: 15px !important;
-            }
+        .microlight:not(:last-child) {
+        margin-bottom: 15px !important;
+        }
+
+        .swagger-ui .prop-type, .swagger-ui .model .property.primitive, .swagger-ui .prop-format, .swagger-ui table.model tr.property-row td {
+            font-family: "PT Mono", monospace !important;
+        }
+
+        .swagger-ui table.model tr.description td:first-child, .swagger-ui table.model tr.property-row.required td:first-child {
+            padding-top: 0.5rem;
+        }
 
     </style>
 </head>
@@ -72,7 +116,7 @@
         window.onload = function () {
         // Load Swagger UI
         const ui = SwaggerUIBundle({
-            url: "./swagger.json",
+            url: "./swagger.yaml",
             dom_id: '#swagger-ui',
             presets: [
                 SwaggerUIBundle.presets.apis,

@@ -1,12 +1,24 @@
 openapi: 3.0.3
 info:
   title: Colladocs API 0.1
-  description: |-
-    Colladocs API for user management and document handling.
+  description: >
+    Imagine an **API** that effortlessly connects your app to a robust document management system, simplifying everything from **document storage** to **real-time collaboration**. Our project offers a seamless backend solution, allowing you to focus on building incredible user experiences while we handle the complex tasks behind the scenes.<br><br>
+    
+    With a few simple **[API calls](#)**, you can:<br>
+    - Authenticate users and manage their profiles securely.<br>
+    - Create, organize, and structure documents with **smart folders** that support nested paths.<br>
+    - Store and retrieve content like **text**, **images**, **code**, or **videos** via flexible endpoints.<br><br>
+
+    Our API doesn’t just store data—it empowers collaboration. You can assign user roles such as _editor_, _viewer_, or _contributor_, track document changes, and even manage **[real-time connections](#)** to ensure everyone stays on the same page.<br><br>
+    
+    **Why should you care?** Because we take care of data validation, role management, and security so that you can concentrate on scaling your app, without worrying about backend chaos. From content creation to multi-user contributions, it’s all handled smoothly through our API.<br><br>
+    
+    Your app’s users deserve a seamless experience, and with our API, you can deliver just that. It’s time to unlock the potential of smarter document management—**[start integrating today](#)**!<br>
   license:
     name: MIT
     url: https://opensource.org/license/mit
   version: N/A
+
 
 tags:
   - name: user
