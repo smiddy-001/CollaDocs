@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swagger UI Custom Style Test</title>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/3.52.0/swagger-ui.css" >
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=PT+Mono&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+        body {
+            background-image: url("background.png");
+            background-repeat: no-repeat;
+            background-size: 2000px;
+            /* background-clip:border-box; */
+            background-repeat: no-repeat;
+        }
+
+        .swagger-ui .info {
+            margin: 20px 0;
+        }
+
+        .swagger-ui .info .title {
+            padding-top: 0;
+            font-size: 62px;
+            color: white;
+            padding-bottom: 50px;
+        }
+        .swagger-ui .topbar {
+            display: none;
+        }
+        .swagger-ui .opblock {
+            border: none;
+            border-radius: 2px;
+            background: transparent;
+            box-shadow: none;
+        }
+        .swagger-ui .info .title small:not(small.version-stamp) {
+            display: none;
+        }
+
+        .microlight {
+                font-family: monospace !important;
+                white-space: pre !important;
+                background-color: #ffffff !important;
+                color: #383a42 !important;
+                padding: 15px !important;
+                text-align: left !important;
+                overflow-x: auto !important;
+                box-shadow: none !important;
+                border-radius: 0.2em grey !important;
+                border: solid #ededed;
+            }
+
+            .microlight:not(:last-child) {
+            margin-bottom: 15px !important;
+            }
+
+    </style>
+</head>
+<body>
+    <div id="swagger-ui"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/3.52.0/swagger-ui-bundle.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/3.52.0/swagger-ui-standalone-preset.js"></script>
+    <script>
+    // Function to replace text in the HTM
+
+        window.onload = function () {
+        // Load Swagger UI
+        const ui = SwaggerUIBundle({
+            url: "./swagger.json",
+            dom_id: '#swagger-ui',
+            presets: [
+                SwaggerUIBundle.presets.apis,
+                SwaggerUIStandalonePreset
+            ],
+            layout: "StandaloneLayout"
+        });
+
+        // Inject custom CSS to override Swagger UI's font
+        const customStyles = document.createElement('style');
+        customStyles.innerHTML = `
+            // #swagger-ui, #swagger-ui * {
+            //     font-family: "Inter", sans-serif !important;
+            // }
+
+            .swagger-ui .code, .swagger-ui code, .swagger-ui .opblock .opblock-summary-path .nostyle > span {
+              font-family: "PT Mono", monospace !important;
+            }
+
+            *:focus {
+                outline: none !important;
+                box-shadow: none !important;
+                background: inherit !important;
+                border: none !important;
+            }
+        `;
+        document.head.appendChild(customStyles);
+
+        // Set the window's Swagger UI instance for further use if needed
+        window.ui = ui;
+    };
+    </script>
+</body>
+</html>
