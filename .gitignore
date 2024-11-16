@@ -48,3 +48,4 @@ build/
 
 ### Mac OS ###
 .DS_Store
+docs/database/database_docs_key
