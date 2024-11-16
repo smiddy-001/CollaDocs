@@ -1,6 +1,6 @@
 #
 #       DECLARATIVE CONFIGURATION YAML
-#       ------------------------------
+#       ==============================
 #
 #       is used to declare our configuration
 #       in one file. Which is loaded with
@@ -14,7 +14,7 @@
 # ========================== DEFAULT CONFIG ==========================
 # default is called for everything, it specifies versions and things that 
 # will not be changed often if ever. It should also specify file size limits
-# and that stuff, as this should be the same between test enviroments
+# and that stuff, as this should be the same between enviroments
 
 # ========================== DEVELOPMENT CONFIG ==========================
 # development is needed so I can pass in some of the productiony stuff into
@@ -32,6 +32,7 @@
 
 # from here on only **inline comments** should be used to make the file as readable as possible
 
+# === DEFUALT CONFIG ===
 
 default:
   IMAGE:
@@ -54,6 +55,7 @@ default:
   FRONTEND:
     ...
 
+# === DEV CONFIG ===
 
 dev:
   CONTAINER:
@@ -72,6 +74,7 @@ dev:
     FRONTEND:
       ...
 
+# === TEST CONFIG ===
 
 test:
   CONTAINER:

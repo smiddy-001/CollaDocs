@@ -27,12 +27,14 @@
             background-size: cover;
             padding: 20px 4rem;
             border-radius: 4px;
-            box-shadow: 2px 6px 1rem #00000022;
+            box-shadow: 2px 6px 1rem #b5a6f60f;
         }
 
         .swagger-ui .info .description .renderedMarkdown p {
             color: #000000cc;
         }
+
+
 
         a, .swagger-ui .info a {
             color: #dc28d0;
@@ -116,7 +118,7 @@
         window.onload = function () {
         // Load Swagger UI
         const ui = SwaggerUIBundle({
-            url: "./swagger.yaml",
+            url: "swagger.yaml",
             dom_id: '#swagger-ui',
             presets: [
                 SwaggerUIBundle.presets.apis,
