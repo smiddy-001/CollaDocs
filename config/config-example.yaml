@@ -1,0 +1,107 @@
+#
+#       DECLARATIVE CONFIGURATION YAML
+#       ==============================
+#
+#       is used to declare our configuration
+#       in one file. Which is loaded with
+#       load_config.sh which loads the defualt
+#       then either dev or test or prod, 
+#       depending on the 0th level header
+#       then it loads it to the current shell
+#       which is good because sometimes we dont
+#       want our enviroment to be set in stone
+
+# ========================== DEFAULT CONFIG ==========================
+# default is called for everything, it specifies versions and things that 
+# will not be changed often if ever. It should also specify file size limits
+# and that stuff, as this should be the same between enviroments
+
+# ========================== DEVELOPMENT CONFIG ==========================
+# development is needed so I can pass in some of the productiony stuff into
+# a non production enviroment, to best test out the developemnt stuff, this
+# is also where I can give out some keys to other computers and all of that
+# stuff
+# development build for a reasonably normal thing without a whole lot of test and mocks
+
+# ========================== TEST CONFIG ==========================
+# a testing environment where I can fuck absolute everything up and
+# it is fine as its me just testing things out test involves a whole
+# lot of fake users and fake data to reinact what the production would
+# be, usually to be run and instantly shut down to test that the whole 
+# thing works
+
+# from here on only **inline comments** should be used to make the file as readable as possible
+
+# ============================================================
+# base config (always happens)
+
+# pre dev/test/prod, and can be overidden
+pre:
+  IMAGE:
+    NAME: oracle/database:19.3.0-ee
+  LOGGING:
+    DB:
+      ENABLE_ARCHIVELOG: true
+      ENABLE_FORCE_LOGGING: true
+  DB:
+    PROTOCOL: jdbc
+    TYPE: oracle
+    DRIVER: thin
+    HOST: localhost
+    PORT: 1521
+    NAME: ORCLCDB
+    NOFILE: 1024:65536        # n of open files per process (soft limit: 1024, hard limit: 65536)
+    NPROC: 2047:16384         # n of processes per user (soft limit: 2047, hard limit: 16384)
+    STACK: 10485760:33554432  # Limits the stack size per process (soft limit: 10 MB, hard limit: 32 MB)
+    MEMLOCK: 3221225472       # Limits the amount of memory that can be locked into RAM (soft and hard limit: 3 GB)
+  BACKEND:
+    ...
+  FRONTEND:
+    ...
+
+# post dev/test/prod, and cannot be overriden
+post:
+  DB:
+    URL: ${DB_PROTOCOL}:${DB_TYPE}@${DB_HOST}:${DB_PORT}/${DB_NAME}
+
+# base config
+# ============================================================
+
+# development config (when users do --mode dev)
+dev:
+  CONTAINER:
+    NAME: dev-colladocs-database
+  DB:
+    URL: localhost:1521/devdb
+    PORT: 1521
+    NAME: devdb
+    SID: DEV
+    ADMIN:
+      USERNAME: SYS
+      PASSWORD: bmYmq%nwdp
+    USER:
+      USERNAME: user_G9feN # sqlplus user_G9feN/ceMrSe3PYV@localhost:1521/ORCLPDB1
+      PASSWORD: ceMrSe3PYV # sqlplus SYS/ceMrSe3PYV as SYSDBA
+    BACKEND:
+      ...
+    FRONTEND:
+      ...
+
+# test config (when users do --mode test)
+test:
+  CONTAINER:
+    NAME: test-colladocs-database
+  DB:
+    PORT: 1521
+    NAME: testdb
+    SID: TEST
+    ADMIN:
+      USERNAME: SYS
+      PASSWORD: iRwLTw*y2c
+    USER:
+      USERNAME: user_HkbeN
+      PASSWORD: pass_9s\&zr
+  BACKEND:
+    ...
+  FRONTEND:
+    ...

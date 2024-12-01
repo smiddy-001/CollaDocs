@@ -1,1 +1,0 @@
-When a user requests data, they are talking with the dto, which calls the data access object (fetch from database), also checks we are ok to do so by the business logic layer / model.
