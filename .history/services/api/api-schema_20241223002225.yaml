@@ -1,0 +1,610 @@
+openapi: 3.0.3
+info:
+  title: Multi-User Document Editor API with Admin Console and OAuth
+  description: API supporting admin-level operations, user cost tracking, and OAuth authentication via Curity.
+  version: 4.0.0
+servers:
+  - url: https://api.documenteditor.com/v1
+    description: Production Server
+
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://curity.example.com/oauth/authorize
+          tokenUrl: https://curity.example.com/oauth/token
+          scopes:
+            admin: Admin-level access
+            user: User-level access
+
+security:
+  - oauth2:
+      - user
+      - admin
+
+paths:
+  /admin/users:
+    get:
+      summary: Get all users
+      description: Retrieves a list of all users with details like account status, file size usage, and server cost.
+      tags:
+        - Admin
+      security:
+        - oauth2:
+            - admin
+      responses:
+        '200':
+          description: List of users retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    userId:
+                      type: string
+                      example: user123
+                    username:
+                      type: string
+                      example: johndoe
+                    status:
+                      type: string
+                      enum: [active, paused]
+                      example: active
+                    fileSizeUsage:
+                      type: string
+                      example: "10MB"
+                    serverCost:
+                      type: string
+                      example: "$5/month"
+                example:
+                  - userId: user123
+                    username: johndoe
+                    status: active
+                    fileSizeUsage: "10MB"
+                    serverCost: "$5/month"
+                  - userId: user456
+                    username: janedoe
+                    status: paused
+                    fileSizeUsage: "2GB"
+                    serverCost: "$20/month"
+
+
+  /admin/users/{userId}:
+    get:
+      summary: Get user details
+      description: Retrieves detailed information for a specific user, including file size usage and server cost.
+      tags:
+        - Admin
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - oauth2:
+            - admin
+      responses:
+        '200':
+          description: User details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                    example: user123
+                  username:
+                    type: string
+                    example: johndoe
+                  status:
+                    type: string
+                    enum: [active, paused]
+                    example: active
+                  fileSizeUsage:
+                    type: string
+                    example: "10MB"
+                  serverCost:
+                    type: string
+                    example: "$5/month"
+                example:
+                  userId: user123
+                  username: johndoe
+                  status: active
+                  fileSizeUsage: "10MB"
+                  serverCost: "$5/month"
+        '404':
+          description: User not found.
+
+    patch:
+      summary: Update user status
+      description: Allows the admin to pause or resume a user account.
+      tags:
+        - Admin
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [active, paused]
+                  example: paused
+              required:
+                - status
+      security:
+        - oauth2:
+            - admin
+      responses:
+        '200':
+          description: User status updated successfully.
+        '404':
+          description: User not found.
+
+  /oauth/token:
+    post:
+      summary: Token exchange
+      description: Exchanges authorization codes or refresh tokens for access tokens using Curity.
+      tags:
+        - OAuth
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                grant_type:
+                  type: string
+                  enum: [authorization_code, refresh_token]
+                code:
+                  type: string
+                  nullable: true
+                refresh_token:
+                  type: string
+                  nullable: true
+                redirect_uri:
+                  type: string
+                  example: https://app.example.com/callback
+                client_id:
+                  type: string
+                  example: your-client-id
+                client_secret:
+                  type: string
+                  example: your-client-secret
+      responses:
+        '200':
+          description: Token exchanged successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    example: access-token-example
+                  token_type:
+                    type: string
+                    example: Bearer
+                  expires_in:
+                    type: integer
+                    example: 3600
+                  refresh_token:
+                    type: string
+                    example: refresh-token-example
+
+  /oauth/userinfo:
+    get:
+      summary: Fetch user info
+      description: Retrieves the authenticated user's profile information.
+      tags:
+        - OAuth
+      security:
+        - oauth2:
+            - user
+            - admin
+      responses:
+        '200':
+          description: User info retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                    example: user123
+                  username:
+                    type: string
+                    example: johndoe
+                  email:
+                    type: string
+                    example: johndoe@example.com
+                  roles:
+                    type: array
+                    items:
+                      type: string
+                      example: user
+
+  /documents:
+    post:
+      summary: Create a new document
+      description: Creates a new document and returns its unique ID.
+      tags:
+        - Documents
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: Collaborative Notes
+                content:
+                  type: string
+                  example: Initial document content.
+              required:
+                - title
+      responses:
+        '201':
+          description: Document created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: 123e4567-e89b-12d3-a456-426614174000
+
+  /documents/{documentId}:
+    get:
+      summary: Get a document
+      description: Retrieves the document with the specified ID.
+      tags:
+        - Documents
+      parameters:
+        - name: documentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Document retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  title:
+                    type: string
+                  content:
+                    type: string
+                  lastUpdated:
+                    type: string
+                    format: date-time
+                example:
+                  id: 123e4567-e89b-12d3-a456-426614174000
+                  title: Collaborative Notes
+                  content: Updated content here.
+                  lastUpdated: 2024-12-07T12:00:00Z
+        '404':
+          description: Document not found
+
+    patch:
+      summary: Update a document
+      description: Updates the content of a specified document.
+      tags:
+        - Documents
+      parameters:
+        - name: documentId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  example: Revised content for the document.
+      responses:
+        '200':
+          description: Document updated successfully
+        '404':
+          description: Document not found
+
+  /documents/{documentId}/collaborators:
+    post:
+      summary: Add a collaborator
+      description: Adds a user as a collaborator to a specified document.
+      tags:
+        - Collaborators
+      parameters:
+        - name: documentId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  example: user123
+              required:
+                - userId
+      responses:
+        '200':
+          description: Collaborator added successfully
+        '404':
+          description: Document not found
+
+    get:
+      summary: Get collaborators
+      description: Retrieves a list of users collaborating on a document.
+      tags:
+        - Collaborators
+      parameters:
+        - name: documentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Collaborators retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    userId:
+                      type: string
+                    username:
+                      type: string
+                  example:
+                    - userId: user123
+                      username: johndoe
+                    - userId: user456
+                      username: janedoe
+        '404':
+          description: Document not found
+
+  /folders:
+    post:
+      summary: Create a new folder
+      description: Creates a new folder with a description and an optional parent folder for nesting.
+      tags:
+        - Folders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Projects
+                description:
+                  type: string
+                  example: Folder containing project-related documents.
+                parentId:
+                  type: string
+                  nullable: true
+                  example: 123e4567-e89b-12d3-a456-426614174000
+              required:
+                - name
+                - description
+      responses:
+        '201':
+          description: Folder created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: 123e4567-e89b-12d3-a456-426614174000
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  parentId:
+                    type: string
+                  path:
+                    type: string
+                    example: "folder1/folder2"
+        '400':
+          description: Nesting limit exceeded or invalid parent folder.
+
+  /folders/{folderId}:
+    get:
+      summary: Fetch folder details
+      description: Retrieves the folder's metadata, nested contents (documents and subfolders), and its collapsible state.
+      tags:
+        - Folders
+      parameters:
+        - name: folderId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Folder details retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  collapsible:
+                    type: boolean
+                    example: true
+                  contents:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        type:
+                          type: string
+                          enum: [document, folder]
+                        name:
+                          type: string
+                        description:
+                          type: string
+                          nullable: true
+                  path:
+                    type: string
+                    example: "folder1/folder2"
+                example:
+                  id: 123e4567-e89b-12d3-a456-426614174000
+                  name: Projects
+                  description: Folder containing project-related documents.
+                  collapsible: true
+                  contents:
+                    - id: doc123
+                      type: document
+                      name: Proposal.docx
+                      description: null
+                    - id: folder789
+                      type: folder
+                      name: Subfolder
+                      description: Subfolder description
+                  path: "folder1/folder2"
+        '404':
+          description: Folder not found.
+
+    delete:
+      summary: Delete a folder
+      description: Deletes a folder and its nested contents, if any.
+      tags:
+        - Folders
+      parameters:
+        - name: folderId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Folder deleted successfully.
+        '404':
+          description: Folder not found.
+
+  /folders/{folderId}/contents:
+    post:
+      summary: Add document or subfolder to folder
+      description: Adds a document or a subfolder to a specified folder. Validates nesting depth for folders.
+      tags:
+        - Folders
+      parameters:
+        - name: folderId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                itemType:
+                  type: string
+                  enum: [document, folder]
+                  example: document
+                itemId:
+                  type: string
+                  example: 123e4567-e89b-12d3-a456-426614174000
+      responses:
+        '200':
+          description: Item added successfully.
+        '400':
+          description: Nesting limit exceeded or invalid item type.
+        '404':
+          description: Folder or item not found.
+
+  /folders/tree:
+    get:
+      summary: Retrieve folder tree structure
+      description: Retrieves a flattened tree structure of all folders and documents for efficient frontend rendering and caching.
+      tags:
+        - Folders
+      responses:
+        '200':
+          description: Folder tree retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    type:
+                      type: string
+                      enum: [document, folder]
+                    parentId:
+                      type: string
+                      nullable: true
+                    description:
+                      type: string
+                    path:
+                      type: string
+                      example: "folder1/folder2"
+                example:
+                  - id: folder123
+                    name: Projects
+                    type: folder
+                    parentId: null
+                    description: Root folder for projects.
+                    path: "Projects"
+                  - id: doc789
+                    name: Proposal.docx
+                    type: document
+                    parentId: folder123
+                    description: null
+                    path: "Projects/Proposal.docx"

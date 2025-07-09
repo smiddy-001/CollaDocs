@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document Editor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+    header {
+      background-color: #6200ea;
+      color: white;
+      display: flex;
+      align-items: center;
+      padding: 10px 20px;
+      justify-content: space-between;
+    }
+    .logo {
+      background-color: magenta;
+      width: 40px;
+      height: 40px;
+      display: inline-block;
+      border-radius: 5px;
+    }
+    .title {
+      margin-left: 15px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .user-menu {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
+    }
+    .user-menu .material-icons {
+      font-size: 28px;
+    }
+    .dropdown {
+      display: none;
+      position: absolute;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      min-width: 100px;
+    }
+    .dropdown.active {
+      display: block;
+    }
+    .dropdown-item {
+      padding: 10px 20px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .dropdown-item:hover {
+      background-color: #f4f4f4;
+    }
+    .navbar {
+      background-color: #ffffff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .menu-item {
+      cursor: pointer;
+      padding: 5px 10px;
+      transition: background-color 0.2s;
+    }
+    .menu-item:hover {
+      background-color: #f4f4f4;
+    }
+    .document-header {
+      background: #fff;
+      padding: 10px 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .folder-path {
+      font-size: 14px;
+      color: #666;
+    }
+    .document {
+      background: white;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      min-height: 500px;
+    }
+    .content {
+      padding: 20px;
+      height: calc(100vh - 120px); /* Subtract header and toolbar height */
+      overflow-y: auto;
+    }
+    .toolbar {
+      background-color: #ffffff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: start;
+      gap: 10px;
+      position: sticky;
+      top: 50px;
+      z-index: 9;
+    }
+    .tools .material-icons {
+      font-size: 20px;
+      cursor: pointer;
+      padding: 5px;
+      transition: background-color 0.2s;
+    }
+    .tools .material-icons:hover {
+      background-color: #f4f4f4;
+      border-radius: 50%;
+    }
+    .dropdown-select {
+      cursor: pointer;
+      position: relative;
+    }
+    .dropdown-select:hover {
+      border-color: #6200ea;
+    }
+    .dropdown-select .material-icons {
+      font-size: 20px;
+    }
+    .dropdown-select .dropdown {
+      min-width: 120px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display: flex; align-items: center;">
+      <div class="logo"></div>
+      <div class="title">Document Title</div>
+    </div>
+    <div class="user-menu" id="userMenu">
+      <span class="material-icons">account_circle</span>
+      <div class="dropdown" id="userDropdown">
+        <div class="dropdown-item">Profile</div>
+        <div class="dropdown-item">Settings</div>
+        <div class="dropdown-item">Log Out</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="menu-item" data-dropdown="fileDropdown">File</div>
+    <div class="menu-item" data-dropdown="editDropdown">Edit</div>
+    <div class="menu-item" data-dropdown="viewDropdown">View</div>
+    <div class="menu-item" data-dropdown="insertDropdown">Insert</div>
+    <div class="menu-item" data-dropdown="formatDropdown">Format</div>
+    <div class="menu-item" data-dropdown="colorDropdown">Color</div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="tools">
+      <span class="material-icons" id="bold">format_bold</span>
+      <span class="material-icons" id="italic">format_italic</span>
+      <span class="material-icons" id="underline">format_underline</span>
+      <span class="material-icons" id="highlight">highlight</span>
+    </div>
+  </div>
+
+  <!-- Folder Path above the document -->
+  <div class="document-header">
+    <div class="folder-path">Home > Documents > Current Document</div>
+  </div>
+
+  <!-- Document Content -->
+  <div class="content">
+    <div class="document">
+      <h1>Document Title</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sollicitudin, dui sit amet convallis tempor, ligula erat ultrices ante, id efficitur dui libero et urna.</p>
+    </div>
+  </div>
+
+  <!-- Dropdowns -->
+  <div id="fileDropdown" class="dropdown">
+    <div class="dropdown-item">New</div>
+    <div class="dropdown-item">Open</div>
+    <div class="dropdown-item">Save</div>
+    <div class="dropdown-item">Export</div>
+  </div>
+  <div id="editDropdown" class="dropdown">
+    <div class="dropdown-item">Undo</div>
+    <div class="dropdown-item">Redo</div>
+    <div class="dropdown-item">Cut</div>
+    <div class="dropdown-item">Copy</div>
+  </div>
+  <div id="viewDropdown" class="dropdown">
+    <div class="dropdown-item">Zoom In</div>
+    <div class="dropdown-item">Zoom Out</div>
+    <div class="dropdown-item">Fullscreen</div>
+  </div>
+  <div id="insertDropdown" class="dropdown">
+    <div class="dropdown-item">Image</div>
+    <div class="dropdown-item">Table</div>
+    <div class="dropdown-item">Link</div>
+  </div>
+  <div id="formatDropdown" class="dropdown">
+    <div class="dropdown-item">Text Style</div>
+    <div class="dropdown-item">Paragraph</div>
+  </div>
+  <div id="colorDropdown" class="dropdown">
+    <div class="dropdown-item">Red</div>
+    <div class="dropdown-item">Blue</div>
+    <div class="dropdown-item">Green</div>
+  </div>
+
+  <script>
+    // Dropdown functionality
+    const menuItems = document.querySelectorAll('.menu-item');
+    const dropdowns = document.querySelectorAll('.dropdown');
+
+    menuItems.forEach(item => {
+      item.addEventListener('click', (event) => {
+        event.stopPropagation();
+        const dropdownId = item.dataset.dropdown;
+        const dropdown = document.getElementById(dropdownId);
+
+        // Close other dropdowns
+        dropdowns.forEach(d => d.classList.remove('active'));
+
+        // Toggle the clicked dropdown
+        dropdown.classList.toggle('active');
+      });
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', () => {
+      dropdowns.forEach(d => d.classList.remove('active'));
+    });
+  </script>
+</body>
+</html>

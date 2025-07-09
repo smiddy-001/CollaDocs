@@ -1,0 +1,9 @@
+<template>
+    <nav class="w-screen, h-10 flex flex-col jus">
+        <div id="colladocs-logo" class="h-8 w-8 rounded-xl bg-slate-800"></div>
+        <v-icon name="bi-music-player" />
+    </nav>
+</template>
+
+<script>
+</script>
